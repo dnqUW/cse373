@@ -28,16 +28,35 @@ public class IntTreeProblems {
      * (The root node is treated as having depth 1.)
      */
     public static int depthSum(IntTree tree) {
-        // TODO replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return depthSum(tree.overallRoot, 1);
+    }
+
+    private static int depthSum(IntTreeNode root, int height) {
+        if (root == null) { // base condition root == null
+            return 0;
+        } else {
+            return (root.data * height) + depthSum(root.left, height + 1) +
+                depthSum(root.right, height + 1);
+        }
     }
 
     /**
      * Removes all leaf nodes from the given tree.
      */
     public static void removeLeaves(IntTree tree) {
-        // TODO replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        tree.overallRoot = removeLeaves(tree.overallRoot);
+    }
+
+    private static IntTreeNode removeLeaves(IntTreeNode root) {
+        if (root != null) {
+            if (root.left == null && root.right == null) {
+                root = null;
+            } else {
+                root.left = removeLeaves(root.left);
+                root.right = removeLeaves(root.right);
+            }
+        }
+        return root;
     }
 
     /**
@@ -45,7 +64,20 @@ public class IntTreeProblems {
      * (The resulting tree is still a BST.)
      */
     public static void trim(IntTree tree, int min, int max) {
-        // TODO replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
-    }
+        tree.overallRoot = trim(tree.overallRoot, min, max);
+     }
+
+     private static IntTreeNode trim(IntTreeNode root, int min, int max) {
+        if (root == null) {
+            return null;
+        } else if (root.data < min) { // if larger then go to left, if less then right
+            return trim(root.right, min, max); // return right tree, go right then recurse
+        } else if (root.data > max) {
+            return trim(root.left, min, max); // return left tree, go left then recurse
+        } else {
+            root.left = trim(root.left, min, max); // if inclusive, go left, left unchanged
+            root.right = trim(root.right, min, max); // then go right, go right, right unchanged
+        }
+        return root;
+     }
 }

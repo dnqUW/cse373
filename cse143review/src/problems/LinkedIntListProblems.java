@@ -4,6 +4,7 @@ import datastructures.LinkedIntList;
 // Checkstyle will complain that this is an unused import until you use it in your code.
 import datastructures.LinkedIntList.ListNode;
 
+
 /**
  * See the spec on the website for example behavior.
  *
@@ -22,16 +23,27 @@ public class LinkedIntListProblems {
      * Reverses the 3 elements in the `LinkedIntList` (assume there are exactly 3 elements).
      */
     public static void reverse3(LinkedIntList list) {
-        // TODO replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        ListNode curr = list.front.next.next;
+        curr.next = list.front.next;
+        curr.next.next = list.front.next;
+        curr.next.next.next = list.front;
+        curr.next.next.next = null;
+        list.front = curr;
     }
 
     /**
      * Moves the first element of the input list to the back of the list.
      */
     public static void firstToLast(LinkedIntList list) {
-        // TODO replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        if (list.front != null) {
+            ListNode curr = list.front;
+            while (curr.next != null) {
+                curr = curr.next;
+            }
+            curr.next = list.front;
+            list.front = list.front.next;
+            curr.next.next = null;
+        }
     }
 
     /**
@@ -40,7 +52,22 @@ public class LinkedIntListProblems {
      */
     public static LinkedIntList concatenate(LinkedIntList a, LinkedIntList b) {
         // Hint: you'll need to use the 'new' keyword to construct new objects.
-        // TODO replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        LinkedIntList combined = new LinkedIntList();
+        if (b.front == null) {
+            combined = a;
+        } else if (a.front == null) {
+            combined = b;
+        } else {
+            ListNode curr = a.front;
+            combined.front = new ListNode(curr.data);
+            ListNode curr2 = combined.front;
+            while (curr.next != null) {
+                curr = curr.next;
+                curr2.next = new ListNode(curr.data);
+                curr2 = curr2.next;
+            }
+            curr2.next = b.front;
+        }
+        return combined;
     }
 }
