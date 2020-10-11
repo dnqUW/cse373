@@ -2,8 +2,6 @@ package deques;
 
 public class LinkedDeque<T> extends AbstractDeque<T> {
     private int size;
-    Node<T> sentFront;
-    Node<T> sentBack;
     Node<T> front;
     Node<T> back;
 
@@ -11,32 +9,30 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
     // Constructs the deque
     public LinkedDeque() {
         size = 0; // size of deque
-        sentFront = new Node<>((T) "dummy"); // Points to the front of the deque
-        sentBack = new Node<>((T) "dummy"); // Points to the back of the deque
-        front = sentFront;
-        back = sentBack;
+        front = new Node<>(null);
+        back = new Node<>(null);
+        front.next = back; // Points to the front of the deque // two nodes, front and back. sentFront represents the next field of front, sentBack is the last item in list
+        back.prev = front; // Points to the back of the deque // front next to point to back // these ensures these two are linked, and are circular
     }
 
 
     // adds the given item to the front of the deque
     public void addFirst(T item) {
         size += 1;
-        // if (front == null) {
-        //      back = new Node<>(item);
-        //  }
-        sentFront.prev = new Node<>(item, null, sentFront); // dummy node is moving along with node
-        front = sentFront;
+        Node<T> temp = new Node<>(item);
+        temp.next = front;
+        front = temp;
+        // Old front doesnt have a prev link, when 2nd node added,
+        // it gets deleted
 
     }
 
     // adds the given item to the back of the deque
     public void addLast(T item) {
         size += 1;
-        // if (back == null) {
-        //     front = new Node<>(item);
-        // }
-        sentBack.next = new Node<>(item, sentBack.prev, null); // dummy node is moving along with node
-        back = sentBack;
+        Node<T> temp = new Node<>(item);
+        temp.prev = back;
+        back = temp;
     }
 
     // Returns the value of the first item in the list, and removes it.
@@ -45,8 +41,9 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
             return null;
         }
         size -= 1;
-        sentFront = sentFront.next;
-        return front.value; // return front.value;
+        T result = front.value;
+        front = front.next;
+        return result; // return front.value;
     }
 
     // Returns the value of the last item in the list, and removes it.
@@ -60,9 +57,10 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
         // back = back.prev;
         // back.prev = null;
         size -= 1;
-        T result = sentBack.value;
-        sentBack = sentBack.prev;
-        return result; // return back.value;
+        T result = back.value;
+        back = back.prev;
+        return result;
+        // return back.value;
         // Or a holder for the value and then remove If we look at testing, we know that
         // assert.removeFirst/Last returns an actual number. Maybe we check value
     }
