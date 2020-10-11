@@ -225,15 +225,50 @@ public abstract class BaseDequeTests extends BaseTest {
         deque.addFirst(-3);
 
         // Test a tricky sequence of removes
-        assertThat(deque.removeFirst()).isEqualTo(-3);
+        assertThat(deque.removeFirst()).isEqualTo(-3); // states after the resize follow the invariants of a Deque
         assertThat(deque.removeLast()).isEqualTo(5);
         assertThat(deque.removeLast()).isEqualTo(4);
         assertThat(deque.removeLast()).isEqualTo(3);
         assertThat(deque.removeLast()).isEqualTo(2);
 
-        // TODO ArrayDeque fails here; write better tests to help you find and fix the bug
-        int actual = deque.removeLast();
+        int actual = deque.removeLast(); // i = 15
         assertThat(actual).isEqualTo(1);
         checkInvariants(deque);
+    }
+
+    @Test
+    void confusingTest_withTwoMoreElements() {
+        Deque<Integer> deque = createDeque();
+        deque.addFirst(0);
+        assertThat(deque.get(0)).isEqualTo(0);
+
+        deque.addLast(1);
+        assertThat(deque.get(1)).isEqualTo(1);
+
+        deque.addFirst(-1);
+        deque.addLast(2);
+        assertThat(deque.get(3)).isEqualTo(2);
+
+        deque.addLast(3);
+        deque.addLast(4);
+
+        // Test that removing and adding back is okay
+        assertThat(deque.removeFirst()).isEqualTo(-1);
+        deque.addFirst(-1);
+        assertThat(deque.get(0)).isEqualTo(-1);
+
+        deque.addLast(5);
+        deque.addFirst(-2);
+        deque.addFirst(-3);
+        deque.addFirst(-4);
+        deque.addFirst(-5);
+
+        assertThat(deque.removeFirst()).isEqualTo(-5);
+        assertThat(deque.removeFirst()).isEqualTo(-4);
+        assertThat(deque.removeFirst()).isEqualTo(-3);
+        assertThat(deque.removeLast()).isEqualTo(5);
+        assertThat(deque.removeLast()).isEqualTo(4);
+        assertThat(deque.removeLast()).isEqualTo(3);
+        assertThat(deque.removeLast()).isEqualTo(2);
     }
 }

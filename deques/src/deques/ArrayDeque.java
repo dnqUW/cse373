@@ -10,10 +10,10 @@ public class ArrayDeque<T> extends AbstractDeque<T> {
     @SuppressWarnings("unchecked")
     public ArrayDeque() {
         data = (T[]) new Object[8];
-        front = 0;
-        back = 1;
+        front = 0; //
+        back = 1; //
         size = 0;
-    }
+    } // changes up to you, changes are super minor. Less than 5 lines.
 
     private static int increment(int i, int length) {
         if (i == length - 1) {
@@ -111,12 +111,16 @@ public class ArrayDeque<T> extends AbstractDeque<T> {
         T[] newData = (T[]) new Object[capacity];
         int i = increment(front, size);
         for (int newIndex = 0; newIndex < size; newIndex += 1) {
+            if (needsDownsize()) {
+                 i = i / 2;
+            }
             newData[newIndex] = data[i];
             i = increment(i, size);
         }
         front = newData.length - 1;
         back = size;
         data = newData;
+
     }
 
     private boolean needsDownsize() {
