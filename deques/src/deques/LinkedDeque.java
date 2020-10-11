@@ -17,18 +17,26 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
         back = sentBack;
     }
 
+
     // adds the given item to the front of the deque
     public void addFirst(T item) {
         size += 1;
-        front.next.prev = new Node<>(item, front, front.next);
+        // if (front == null) {
+        //      back = new Node<>(item);
+        //  }
+        sentFront.prev = new Node<>(item, null, sentFront); // dummy node is moving along with node
+        front = sentFront;
 
     }
 
     // adds the given item to the back of the deque
     public void addLast(T item) {
         size += 1;
-        back.prev.next = new Node<>(item, back.prev, back);
-
+        // if (back == null) {
+        //     front = new Node<>(item);
+        // }
+        sentBack.next = new Node<>(item, sentBack.prev, null); // dummy node is moving along with node
+        back = sentBack;
     }
 
     // Returns the value of the first item in the list, and removes it.
@@ -37,19 +45,23 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
             return null;
         }
         size -= 1;
-        T result = front.next.value;
-        front = front.next;
-        return result; // return front.value;
+        sentFront = sentFront.next;
+        return front.value; // return front.value;
     }
 
     // Returns the value of the last item in the list, and removes it.
     public T removeLast() {
         if (size == 0) {
             return null;
+
         }
+        // back = new Node<>();
+        // back.prev = null;
+        // back = back.prev;
+        // back.prev = null;
         size -= 1;
-        T result = back.prev.value;
-        back.prev.next = null;
+        T result = sentBack.value;
+        sentBack = sentBack.prev;
         return result; // return back.value;
         // Or a holder for the value and then remove If we look at testing, we know that
         // assert.removeFirst/Last returns an actual number. Maybe we check value
@@ -61,11 +73,10 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
             return null;
         }
         Node<T> curr = front;
-        for (int i = 0; i < index; i++) {
+        for (int i = 0; i < index; i++) { // would 0 work
             curr = curr.next;
         }
         return curr.value;
-
     }
 
     // Returns the amount of items in the deque.
