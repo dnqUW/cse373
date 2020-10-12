@@ -39,14 +39,13 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
         T result = front.next.value;
         front.next.next.prev = front;
         front.next = front.next.next;
-        return result; // return front.value;
+        return result;
     }
 
     // Returns the value of the last item in the list, and removes it.
     public T removeLast() {
         if (size == 0) {
             return null;
-
         }
         size -= 1;
         T result = back.prev.value;
@@ -60,9 +59,18 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
         if ((index >= size) || (index < 0)) {
             return null;
         }
-        Node<T> curr = front.next;
-        for (int i = 0; i < index; i++) { // would 0 work
-            curr = curr.next;
+        Node<T> curr;
+        int newIndex = size - index;
+        if (newIndex < index) {
+            curr = back.prev;
+            for (int i = size; i > index + 1; i--) {
+                curr = curr.prev;
+            }
+        } else {
+            curr = front.next;
+            for (int i = 0; i < index; i++) {
+                curr = curr.next;
+            }
         }
         return curr.value;
     }

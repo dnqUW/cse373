@@ -112,7 +112,7 @@ public class ArrayDeque<T> extends AbstractDeque<T> {
         int i = increment(front, size);
         for (int newIndex = 0; newIndex < size; newIndex += 1) {
             if (needsDownsize()) {
-                 i = i / 2;
+                 i = front / 2;
             }
             newData[newIndex] = data[i];
             i = increment(i, size);
