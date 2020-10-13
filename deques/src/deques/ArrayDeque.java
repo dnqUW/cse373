@@ -111,10 +111,16 @@ public class ArrayDeque<T> extends AbstractDeque<T> {
         T[] newData = (T[]) new Object[capacity];
         int i = increment(front, size);
         for (int newIndex = 0; newIndex < size; newIndex += 1) {
-            if (needsDownsize()) {
-                 i = front / 2;
+            // WHY IS I = I /2, and if not necessary
+            // look at cases a21 and a23
+            // are we copying things in the right order
+            if (front == data.length - 1 && front > size) {
+                newData[newIndex] = data[newIndex];
+            } else if (front > size) {
+                newData[newIndex] = data[front + 1 + newIndex];
+            } else {
+                newData[newIndex] = data[i];
             }
-            newData[newIndex] = data[i];
             i = increment(i, size);
         }
         front = newData.length - 1;
