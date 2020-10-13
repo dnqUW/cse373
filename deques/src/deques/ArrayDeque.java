@@ -114,10 +114,10 @@ public class ArrayDeque<T> extends AbstractDeque<T> {
             // WHY IS I = I /2, and if not necessary
             // look at cases a21 and a23
             // are we copying things in the right order
-            if (front == data.length - 1 && front > size) {
+            if (front == data.length - 1) {
                 newData[newIndex] = data[newIndex];
-            } else if (front > size) {
-                newData[newIndex] = data[front + 1 + newIndex];
+            } else if (front > back) { // different check
+                newData[newIndex] = data[front - back + newIndex]; // length 32 out of bounds
             } else {
                 newData[newIndex] = data[i];
             }
