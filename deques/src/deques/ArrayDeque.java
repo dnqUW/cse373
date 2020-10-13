@@ -106,7 +106,6 @@ public class ArrayDeque<T> extends AbstractDeque<T> {
         return size;
     }
 
-    @SuppressWarnings("unchecked")
     private void resize(int capacity) {
         T[] newData = (T[]) new Object[capacity];
         int i = increment(front, size);
@@ -114,10 +113,10 @@ public class ArrayDeque<T> extends AbstractDeque<T> {
             // WHY IS I = I /2, and if not necessary
             // look at cases a21 and a23
             // are we copying things in the right order
-            if (front == data.length - 1) {
-                newData[newIndex] = data[newIndex];
-            } else if (front > back) { // different check
-                newData[newIndex] = data[front - back + newIndex]; // length 32 out of bounds
+            if (front < back) { // for loop
+                newData[newIndex] = data[front + 1 + newIndex];
+            } else if (front > back && back - 1 - newIndex >= 0) { // in test 21/23. 18 @ 29, 17 @30, 16 @31
+                newData[newIndex] = data[back - 1 - newIndex]; // length 32 out of bounds
             } else {
                 newData[newIndex] = data[i];
             }
@@ -128,6 +127,30 @@ public class ArrayDeque<T> extends AbstractDeque<T> {
         data = newData;
 
     }
+    // @SuppressWarnings("unchecked")
+    // private void resize(int capacity) {
+    //     T[] newData = (T[]) new Object[capacity];
+    //     int i = increment(front, size);
+    //     for (int newIndex = 0; newIndex < size; newIndex += 1) {
+    //         // WHY IS I = I /2, and if not necessary
+    //         // look at cases a21 and a23
+    //         // are we copying things in the right order
+    //         if (front == data.length - 1) { // if front == 15,
+    //             newData[newIndex] = data[newIndex];
+    //         } else if (front > back) {
+    //             newData[newIndex] = data[front - back + newIndex];
+    //         } else if (front < back) { // different check
+    //             newData[newIndex] = data[back - front + newIndex]; // length 32 out of bounds
+    //         } else {
+    //             newData[newIndex] = data[i];
+    //         }
+    //         i = increment(i, size);
+    //     }
+    //     front = newData.length - 1;
+    //     back = size;
+    //     data = newData;
+    //
+    // }
 
     private boolean needsDownsize() {
         return ((double) size) / data.length < 0.25 && data.length >= 16;
