@@ -56,15 +56,15 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
 
     // Returns the item at a given index.
     public T get(int index) {
-        if ((index >= size) || (index < 0)) {
-            return null;
+        if ((index >= size) || (index < 0)) { // + 3
+            return null; // + 1
         }
-        Node<T> curr;
-        int newIndex = size - index;
-        if (newIndex < index) {
-            curr = back.prev;
-            for (int i = size; i > index + 1; i--) {
-                curr = curr.prev;
+        Node<T> curr; //+1
+        int newIndex = size - index; //+1
+        if (newIndex < index) {//+1
+            curr = back.prev;//+1
+            for (int i = size; i > index + 1; i--) { //1n + 1
+                curr = curr.prev;//+1
             }
         } else {
             curr = front.next;

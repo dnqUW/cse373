@@ -39,15 +39,15 @@ public class Experiment1LinkedDequeGet {
 
     public long f1(long size) {
         return timeGetsAtIndex(size, 0);
-    }
+    } // front
 
     public long f2(long size) {
         return timeGetsAtIndex(size, size - 1);
-    }
+    } // back
 
     public long f3(long size) {
         return timeGetsAtIndex(size, size / 2);
-    }
+    } // middle of deque
 
     /**
      * Returns the runtime in nanoseconds of `LinkedDeque.get` calls on a deque with the given size
