@@ -1,5 +1,6 @@
 package maps;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -58,9 +59,9 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public V get(Object key) {
         // This is read only, can probably change to for each
-        for (int i = 0; i < entries.length; i++) {
-            if (entries[i].getKey() == key) {
-                return entries[i].getValue();
+        for (SimpleEntry<K, V> entry : entries) {
+            if (entry.getKey() == key) {
+                return entry.getValue();
             }
         }
         return null;
@@ -68,9 +69,10 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V put(K key, V value) {
-        // if (needsResize()) {
-        //     resize();
-        // }
+        if (size == entries.length) {
+            resize();
+        }
+        V currV;
         // for (int i = 0; i < entries.length; i++) {
         //     if (entries[i] != null && entries[i].getKey() != key) {
         //         entries[i].getKey() = key;
@@ -80,7 +82,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         //         entries[i].setValue(value);
         //     }
         // }
-
+        return currV;
     }
 
     @Override
@@ -88,8 +90,8 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         for (int i = 0; i < entries.length; i++) {
             if (entries[i].getKey() == key) {
                 V removedV = entries[i].getValue();
-                entries[i] = entries[entries.length];
-                entries[entries.length] = null;
+                entries[i] = entries[entries.length - 1];
+                entries[entries.length - 1] = null;
                 size--;
                 return removedV;
             }
@@ -99,9 +101,10 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public void clear() {
-        for (int i = 0; i < entries.length; i++) {
-            entries[i] = null;
-        }
+        Arrays.fill(entries, null);
+        // for (int i = 0; i < entries.length; i++) { // other implementation
+        //     entries[i] = null;
+        // }
         size = 0;
     }
 
@@ -118,6 +121,17 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public int size() {
         return size;
+    }
+
+    // You may NOT create any new temporary data structures inside of your iterators.
+    // We want our iterators to be efficient, and having to copy the contents of our
+    // map to some other data structure at any point is suboptimal.
+    private SimpleEntry<K, V>[] resize() {
+        SimpleEntry<K, V>[] newArrayMap = createArrayOfEntries(2 * size);
+        for (int i = 0; i < entries.length; i++) {
+            newArrayMap[i] = entries[i];
+        }
+        return newArrayMap;
     }
 
     @Override
