@@ -26,7 +26,10 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     public ArrayMap(int initialCapacity) {
         this.entries = this.createArrayOfEntries(initialCapacity);
         size = 0;
-
+        // Is it a map yet??? When I call the methods am I directly changing the map?
+        // Or do I somehow need to link said array to the map.
+        // Do i implement a resize method?
+        // Hmm.. Iterator? Iterator<Entry<K, V>> iter = entries.iterator()
     }
 
     /**
@@ -54,6 +57,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V get(Object key) {
+        // This is read only, can probably change to for each
         for (int i = 0; i < entries.length; i++) {
             if (entries[i].getKey() == key) {
                 return entries[i].getValue();
@@ -64,17 +68,19 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V put(K key, V value) {
-        // is an invariant that it will never have a key?
+        // if (needsResize()) {
+        //     resize();
+        // }
         // for (int i = 0; i < entries.length; i++) {
-        //     if (entries[i].getKey() == key) {
+        //     if (entries[i] != null && entries[i].getKey() != key) {
+        //         entries[i].getKey() = key;
+        //         entries[i].setValue(value);
+        //         size++;
+        //     } else if (entries[i].getKey() == key) {
         //         entries[i].setValue(value);
         //     }
         // }
-        //  else {
-        //     entries[entries.length].key = key;
-        //     entries[entries.length].setValue(value);
-        //     size++;
-        // }
+
     }
 
     @Override
@@ -84,6 +90,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
                 V removedV = entries[i].getValue();
                 entries[i] = entries[entries.length];
                 entries[entries.length] = null;
+                size--;
                 return removedV;
             }
         }
@@ -95,6 +102,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         for (int i = 0; i < entries.length; i++) {
             entries[i] = null;
         }
+        size = 0;
     }
 
     @Override
