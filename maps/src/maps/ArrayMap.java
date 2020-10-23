@@ -66,9 +66,9 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         if (size != 0) { // added in to check if a test works, it works, but still getting a
             // Cannot invoke "java.util.AbstractMap$SimpleEntry.getKey()" because "entry" is null
             // for every other test
-            for (SimpleEntry<K, V> entry : entries) {
-                if (entry.getKey() == key) {
-                    return entry.getValue();
+            for (int i = 0; i < size; i++) {
+                if (entries[i].getKey() == key) {
+                    return entries[i].getValue();
                 }
             }
         }
@@ -78,7 +78,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public V put(K key, V value) { // what is there to return
         if (size == entries.length) {
-            resize();
+            entries = resize();
         }
         if (size == 0) { // IF EMPTY, ADD IN entries.containsKey
             entries[0] = new SimpleEntry<>(key, value);
@@ -86,33 +86,18 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
             return entries[0].getValue();
         } else {
             for (SimpleEntry<K, V> entry : entries) {
-                if (entry.getKey() == key) { // ?? IF KEY EXISTS
+                if (entry.getKey() == key) { // IF KEY EXISTS
                     entry.setValue(value);
                     return entry.getValue();
                 } else { // IF KEY DOES NOT EXIST, maybe this whole method should be iter
-                    entries[size - 1] = new SimpleEntry<>(key, value);
+                    // doesnt need to be in the loop since we only ever access the [size] index
+                    entries[size] = new SimpleEntry<>(key, value);
                     size++;
-                    return entries[size - 1].getValue();
-                    // while iter.hasNext(), iter = iter.next()? entries[size] = new SimpleEntry<>(key, value)
-                    //
+                    return null; // entries[size - 1].getValue();
                 }
             }
-            return null;
-            // entries[size - 1] = new SimpleEntry<>(key, value);
-            // size++;
-            // return entries[size - 1].getValue();
         }
-
-
-        // for (int i = 0; i < entries.length; i++) {
-        //     if (entries[i] != null && entries[i].getKey() != key) {
-        //         entries[i].getKey() = key;
-        //         entries[i].setValue(value);
-        //         size++;
-        //     } else if (entries[i].getKey() == key) {
-        //         entries[i].setValue(value);
-        //     }
-        // }
+        return null; // check return value w TA
     }
 
     @Override
@@ -167,12 +152,12 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         return new ArrayMapIterator<>(this.entries);
     }
 
-    //
-    // // Doing so will give you a better string representation for assertion errors the debugger.
-    // @Override
-    // public String toString() {
-    //     return super.toString();
-    // }
+
+    // Doing so will give you a better string representation for assertion errors the debugger.
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 
     private static class ArrayMapIterator<K, V> implements Iterator<Map.Entry<K, V>> {
         private final SimpleEntry<K, V>[] entries;
