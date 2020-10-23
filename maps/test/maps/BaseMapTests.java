@@ -451,7 +451,9 @@ public abstract class BaseMapTests extends BaseTest {
         Map<Integer, Integer> map = createMap();
         map.put(100, null);
 
+        System.out.println(map.get(100));
         assertThat(map).containsEntry(100, null);
+
     }
 
     void exhaust(Iterator<?> iterator) {
