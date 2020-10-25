@@ -61,39 +61,34 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     }
 
     @Override
-    public V get(Object key) { // -1
-        // This is read only, can probably change to for each
+    public V get(Object key) {
         for (int i = 0; i < size; i++) {
             if (entries[i].getKey() == key) {
                 return entries[i].getValue();
             }
         }
         return null;
-
-        //
     }
 
-    // null map to key vs other way around
     @Override
-    public V put(K key, V value) { // what is there to return
+    public V put(K key, V value) {
         if (size == entries.length) {
             entries = resize();
         }
-        //entries[size - 1].getValue()
-        if (size == 0) { // IF EMPTY, ADD IN entries.containsKey
+        if (size == 0) {
             entries[0] = new SimpleEntry<>(key, value);
         } else {
-            for (int i = 0; i < size; i++) { // has key
+            for (int i = 0; i < size; i++) { // if Key exists
                 if (entries[i].getKey() == key) {
                     V oldVal = entries[i].getValue();
                     entries[i].setValue(value);
-                    return oldVal; //entries[i].getValue()
+                    return oldVal;
                 }
             }
-            entries[size] = new SimpleEntry<>(key, value); // doesn't have key
+            entries[size] = new SimpleEntry<>(key, value);
         }
         size++;
-        return null; //entries[0].getValue()
+        return null;
     }
 
     @Override
@@ -109,6 +104,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         }
         return null;
     }
+
 
     @Override
     public void clear() {
@@ -131,9 +127,6 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         return size;
     }
 
-    // You may NOT create any new temporary data structures inside of your iterators.
-    // We want our iterators to be efficient, and having to copy the contents of our
-    // map to some other data structure at any point is suboptimal.
     private SimpleEntry<K, V>[] resize() {
         SimpleEntry<K, V>[] newArrayMap = createArrayOfEntries(2 * size);
         for (int i = 0; i < size; i++) {
@@ -142,19 +135,20 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         return newArrayMap;
     }
 
+    // You may NOT create any new temporary data structures inside of your iterators.
+    // We want our iterators to be efficient, and having to copy the contents of our
+    // map to some other data structure at any point is suboptimal.
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
         // Note: you won't need to change this method (unless you add more constructor parameters)
         return new ArrayMapIterator<>(this.entries);
     }
 
-
-
-    // Doing so will give you a better string representation for assertion errors the debugger.
-    @Override
-    public String toString() {
-        return super.toString();
-    }
+    // // Doing so will give you a better string representation for assertion errors the debugger.
+    // @Override
+    // public String toString() {
+    //     return super.toString();
+    // }
 
     private static class ArrayMapIterator<K, V> implements Iterator<Map.Entry<K, V>> {
         private final SimpleEntry<K, V>[] entries;
@@ -168,10 +162,8 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
 
         @Override
         public boolean hasNext() {
-            if (entries[currIndex + 1] != null) { // or size
-                return true;
-            }
-            return false;
+            //entries != null &&
+            return (entries[currIndex + 1] != null);
         }
 
         @Override
