@@ -3,6 +3,7 @@ package maps;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * @see AbstractIterableMap
@@ -162,15 +163,20 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
 
         @Override
         public boolean hasNext() {
-            //entries != null &&
-            return (entries[currIndex + 1] != null);
+            //return (entries[currIndex + 1] != null);
+            return ((entries.length - 1 > currIndex) && (entries[currIndex] != null));
         }
 
         @Override
         public Map.Entry<K, V> next() {
-            Map.Entry<K, V> entry = entries[currIndex + 1]; // + 1
-            currIndex++;
-            return entry;
+            if (this.hasNext()) {
+                Map.Entry<K, V> entry = entries[currIndex]; // + 1
+                currIndex++;
+                return entry;
+            } else {
+                throw new NoSuchElementException();
+            }
+
         }
     }
 }
