@@ -76,18 +76,18 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         if (size == entries.length) {
             entries = resize();
         }
-        if (size == 0) {
-            entries[0] = new SimpleEntry<>(key, value);
-        } else {
+        // if (size == 0) { // inserting (key, value) at the first index since map is size of 0
+        //     entries[0] = new SimpleEntry<>(key, value);
+        // } else {
             for (int i = 0; i < size; i++) { // if Key exists
-                if (entries[i].getKey() == key) {
+                if (key != null && entries[i].getKey() == key) {
                     V oldVal = entries[i].getValue();
                     entries[i].setValue(value);
                     return oldVal;
                 }
             }
             entries[size] = new SimpleEntry<>(key, value);
-        }
+        //}
         size++;
         return null;
     }
@@ -95,7 +95,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public V remove(Object key) {
         for (int i = 0; i < size; i++) {
-            if (entries[i].getKey() == key) {
+            if (key != null && entries[i].getKey() == key) {
                 V removedV = entries[i].getValue();
                 entries[i] = entries[size - 1];
                 entries[size - 1] = null;
@@ -170,7 +170,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         @Override
         public Map.Entry<K, V> next() {
             if (this.hasNext()) {
-                Map.Entry<K, V> entry = entries[currIndex]; // + 1
+                Map.Entry<K, V> entry = entries[currIndex]; // + 1?
                 currIndex++;
                 return entry;
             } else {
