@@ -31,7 +31,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     public ChainedHashMap(double resizingLoadFactorThreshold, int initialChainCount, int chainInitialCapacity) {
         size = DEFAULT_INITIAL_CHAIN_COUNT;
-        this.chains = new AbstractIterableMap[initialChainCount];
+        this.chains = createArrayOfChains(initialChainCount);
         for (int i = 0; i < initialChainCount; i++) {
             chains[i] = createChain(chainInitialCapacity);
         }
@@ -65,8 +65,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V get(Object key) {
-        int hashedKey = Math.abs(key.hashCode()) % DEFAULT_INITIAL_CHAIN_COUNT; // Math.abs() for negative number cases
-        return chains[hashedKey].get(key);
+        return chainHashedKey(key).get(key);
     }
 
     @Override
@@ -79,8 +78,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V remove(Object key) {
-        int hashedKey = Math.abs(key.hashCode()) % DEFAULT_INITIAL_CHAIN_COUNT;
-        return chains[hashedKey].remove(key);
+        return chainHashedKey(key).remove(key);
     }
 
     @Override
@@ -91,13 +89,17 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public boolean containsKey(Object key) {
-        int hashedKey = Math.abs(key.hashCode()) % DEFAULT_INITIAL_CHAIN_COUNT;
-        return chains[hashedKey].containsKey(key);
+        return chainHashedKey(key).containsKey(key);
     }
 
     @Override
     public int size() {
         return size;
+    }
+
+    private AbstractIterableMap<K, V> chainHashedKey(Object key) {
+        int hashedKey = Math.abs(key.hashCode()) % DEFAULT_INITIAL_CHAIN_COUNT;
+        return chains[hashedKey];
     }
 
     @Override
