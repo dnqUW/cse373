@@ -15,6 +15,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     private static final int DEFAULT_INITIAL_CHAIN_COUNT = 10;
     private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 10;
     private int size;
+    private double loadFactor;
 
     /*
     Warning:
@@ -30,7 +31,8 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     }
 
     public ChainedHashMap(double resizingLoadFactorThreshold, int initialChainCount, int chainInitialCapacity) {
-        size = DEFAULT_INITIAL_CHAIN_COUNT;
+        loadFactor = 0.0;
+        size = DEFAULT_INITIAL_CHAIN_COUNT; // is this size of chains horizontal? Or size of LL vert.
         this.chains = createArrayOfChains(initialChainCount);
         for (int i = 0; i < initialChainCount; i++) {
             chains[i] = createChain(chainInitialCapacity);
@@ -70,8 +72,17 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V put(K key, V value) {
-        int hashedKey = Math.abs(key.hashCode()) % DEFAULT_INITIAL_CHAIN_COUNT;
+        // if (needsResize()) {
+        //  resizeAndRehash();
+        // }
+        // if (key == null) {
+        //     chains[0].put(null, value);
+        //     V firstVal = chains[0].get(null);
+        //     return firstVal;
+        // } else {
+        int hashedKey = Math.abs(key.hashCode()) % chains.length;
         V oldVal = chains[hashedKey].get(key);
+        // hashedKey = 10914, hashedKey % 10 --> 4. Chains Array size 1.
         chains[hashedKey].put(key, value);
         return oldVal;
     }
@@ -98,8 +109,18 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     }
 
     private AbstractIterableMap<K, V> chainHashedKey(Object key) {
-        int hashedKey = Math.abs(key.hashCode()) % DEFAULT_INITIAL_CHAIN_COUNT;
+        int hashedKey = Math.abs(key.hashCode()) % chains.length; //  DEFAULT_INITIAL_CHAIN_COUNT
         return chains[hashedKey];
+    }
+
+    // private boolean needsResize() {
+    //     return loadFactor > loadFactorThreshold;
+    // }
+
+    private AbstractIterableMap<K, V> resizeAndRehash() {
+        AbstractIterableMap<K, V> newChain = createChain(2 * chains.length);
+        // do we rehash here? or later?
+        return newChain;
     }
 
     @Override
