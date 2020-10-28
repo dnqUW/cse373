@@ -31,7 +31,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     }
 
     public ChainedHashMap(double resizingLoadFactorThreshold, int initialChainCount, int chainInitialCapacity) {
-        loadFactor = 0.0;
+        loadFactor = resizingLoadFactorThreshold;
         size = DEFAULT_INITIAL_CHAIN_COUNT; // is this size of chains horizontal? Or size of LL vert.
         this.chains = createArrayOfChains(initialChainCount);
         for (int i = 0; i < initialChainCount; i++) {
@@ -75,15 +75,9 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         // if (needsResize()) {
         //  resizeAndRehash();
         // }
-        // if (key == null) {
-        //     chains[0].put(null, value);
-        //     V firstVal = chains[0].get(null);
-        //     return firstVal;
-        // } else {
-        int hashedKey = Math.abs(key.hashCode()) % chains.length;
-        V oldVal = chains[hashedKey].get(key);
+        V oldVal = chainHashedKey(key).get(key);
         // hashedKey = 10914, hashedKey % 10 --> 4. Chains Array size 1.
-        chains[hashedKey].put(key, value);
+        chainHashedKey(key).put(key, value);
         return oldVal;
     }
 
@@ -109,19 +103,42 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     }
 
     private AbstractIterableMap<K, V> chainHashedKey(Object key) {
-        int hashedKey = Math.abs(key.hashCode()) % chains.length; //  DEFAULT_INITIAL_CHAIN_COUNT
-        return chains[hashedKey];
+        if (key != null) {
+            int hashedKey = Math.abs(key.hashCode()) % chains.length; //  DEFAULT_INITIAL_CHAIN_COUNT
+            return chains[hashedKey];
+        }
+        return null;
     }
 
     // private boolean needsResize() {
-    //     return loadFactor > loadFactorThreshold;
+    //     return loadFactor > DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD;
     // }
 
-    private AbstractIterableMap<K, V> resizeAndRehash() {
-        AbstractIterableMap<K, V> newChain = createChain(2 * chains.length);
+    private void resizeAndRehash() {
+        AbstractIterableMap<K, V>[] newChain = createArrayOfChains(2 * chains.length);
+        size = newChain.length;
+
         // do we rehash here? or later?
-        return newChain;
+        // for (AbstractIterableMap<K, V> oldMap : chains) {
+        //     for (Entry<K, V> entry : oldMap) {
+        //         int hashedKey = Math.abs(entry.getKey().hashCode()) % chains.length;
+        //         // chains[hashedKey] =
+        //         K newKey = (K) hashedKey;
+        //         newChain.put(entry.getKey(), entry.getValue());
+        //     }
+        // }
+
+        for (int i = 0; i < newChain.length; i++) {
+
+                newChain[i]
+        }
+
+        chains = newChain;
+        // return newChain;
+
+
     }
+
 
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
