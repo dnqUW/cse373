@@ -157,7 +157,25 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         }
 
         @Override
-        public boolean hasNext() { return ((chains.length - 1 > currIndex) && (chains[currIndex] != null)); }
+        public boolean hasNext() {
+            for (int i = currIndex; i < chains.length; i++) {
+                if (arrayMapIter != null) {
+                    if (arrayMapIter.hasNext()) {
+                        return true;
+                    }
+                }
+                if (chains.length - 1 > currIndex) {
+                    return false;
+                }
+                if (chains[currIndex] != null) {
+                    arrayMapIter = chains[currIndex].iterator();
+                }
+                // } else {
+                //     arrayMapIter = null;
+                // }
+            }
+            return false;
+        }
 
         @Override
         public Map.Entry<K, V> next() {
