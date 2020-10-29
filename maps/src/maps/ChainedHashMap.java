@@ -15,7 +15,6 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     private static final int DEFAULT_INITIAL_CHAIN_COUNT = 10;
     private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 10;
     private int size;
-    private double loadFactor;
 
     /*
     Warning:
@@ -31,8 +30,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     }
 
     public ChainedHashMap(double resizingLoadFactorThreshold, int initialChainCount, int chainInitialCapacity) {
-        loadFactor = resizingLoadFactorThreshold;
-        size = DEFAULT_INITIAL_CHAIN_COUNT; // is this size of chains horizontal? Or size of LL vert.
+        size = 0; // is this size of chains horizontal? Or size of LL vert.
         this.chains = createArrayOfChains(initialChainCount);
         for (int i = 0; i < initialChainCount; i++) {
             chains[i] = createChain(chainInitialCapacity);
@@ -67,23 +65,27 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V get(Object key) {
-        return chainHashedKey(key).get(key);
+        int hashedKey = chainHashedKey(key);
+        return chains[hashedKey].get(key);
     }
 
     @Override
     public V put(K key, V value) {
-        // if (needsResize()) {
-        //  resizeAndRehash();
-        // }
-        V oldVal = chainHashedKey(key).get(key);
-        // hashedKey = 10914, hashedKey % 10 --> 4. Chains Array size 1.
-        chainHashedKey(key).put(key, value);
+        int hashedKey = chainHashedKey(key);
+        V oldVal = chains[hashedKey].get(key);
+        chains[hashedKey].put(key, value);
+        size++;
+        if ((double) chains[hashedKey].size() / (double) chains.length > DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD) {
+            chains = resizeAndRehash();
+        }
         return oldVal;
     }
 
     @Override
     public V remove(Object key) {
-        return chainHashedKey(key).remove(key);
+        int hashedKey = chainHashedKey(key);
+        size--;
+        return chains[hashedKey].remove(key);
     }
 
     @Override
@@ -94,7 +96,12 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public boolean containsKey(Object key) {
-        return chainHashedKey(key).containsKey(key);
+        int hashedKey = chainHashedKey(key);
+        if (chains[hashedKey] != null) {
+            return chains[hashedKey].containsKey(key);
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -102,43 +109,22 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         return size;
     }
 
-    private AbstractIterableMap<K, V> chainHashedKey(Object key) {
+    private int chainHashedKey(Object key) {
         if (key != null) {
-            int hashedKey = Math.abs(key.hashCode()) % chains.length; //  DEFAULT_INITIAL_CHAIN_COUNT
-            return chains[hashedKey];
+            return Math.abs(key.hashCode()) % chains.length;
+        } else {
+            return 0;
         }
-        return null;
     }
 
-    // private boolean needsResize() {
-    //     return loadFactor > DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD;
-    // }
-
-    private void resizeAndRehash() {
+    private AbstractIterableMap<K, V>[] resizeAndRehash() {
         AbstractIterableMap<K, V>[] newChain = createArrayOfChains(2 * chains.length);
-        size = newChain.length;
-
-        // do we rehash here? or later?
-        // for (AbstractIterableMap<K, V> oldMap : chains) {
-        //     for (Entry<K, V> entry : oldMap) {
-        //         int hashedKey = Math.abs(entry.getKey().hashCode()) % chains.length;
-        //         // chains[hashedKey] =
-        //         K newKey = (K) hashedKey;
-        //         newChain.put(entry.getKey(), entry.getValue());
-        //     }
-        // }
-
-        for (int i = 0; i < newChain.length; i++) {
-
-                newChain[i]
+        for (Map.Entry<K, V> entry : this) {
+            int newHashedKey = entry.getKey().hashCode();
+            newChain[newHashedKey % newChain.length].put(entry.getKey(), entry.getValue());
         }
-
-        chains = newChain;
-        // return newChain;
-
-
+        return newChain;
     }
-
 
     @Override
     public Iterator<Map.Entry<K, V>> iterator() {
@@ -159,24 +145,24 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     private static class ChainedHashMapIterator<K, V> implements Iterator<Map.Entry<K, V>> {
         private AbstractIterableMap<K, V>[] chains;
         private int currIndex;
+        private Iterator<Map.Entry<K, V>> arrayMapIter;
         // You may add more fields and constructor parameters
 
         public ChainedHashMapIterator(AbstractIterableMap<K, V>[] chains) {
             this.chains = chains;
             currIndex = 0;
+            if (chains[currIndex] != null) {
+                arrayMapIter = chains[currIndex].iterator();
+            }
         }
 
         @Override
-        public boolean hasNext() {
-            return ((chains.length - 1 > currIndex) && (chains[currIndex] != null));
-        }
+        public boolean hasNext() { return ((chains.length - 1 > currIndex) && (chains[currIndex] != null)); }
 
         @Override
         public Map.Entry<K, V> next() {
             if (this.hasNext()) {
-                AbstractIterableMap<K, V> entry = chains[currIndex]; // + 1?
-                currIndex++;
-                return (Entry<K, V>) entry;
+                return arrayMapIter.next();
             } else {
                 throw new NoSuchElementException();
             }
