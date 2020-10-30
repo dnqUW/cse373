@@ -10,7 +10,7 @@ import java.util.NoSuchElementException;
  * @see Map
  */
 public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
-    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 1;
+    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 12.5;
     private static final int DEFAULT_INITIAL_CHAIN_COUNT = 10;
     private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 10;
     private int size;
@@ -64,8 +64,12 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V get(Object key) {
-        int hashedKey = chainHashedKey(key);
-        return chains[hashedKey].get(key);
+        if (chains == null) {
+            return null;
+        } else {
+            int hashedKey = chainHashedKey(key);
+            return chains[hashedKey].get(key);
+        }
     }
 
     @Override
@@ -84,9 +88,10 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public V remove(Object key) {
         int hashedKey = chainHashedKey(key);
-        if (containsKey(hashedKey)) {
-            size--;
-        }
+        // if (containsKey(hashedKey)) {
+        //     size--;
+        // }
+        size--;
         return chains[hashedKey].remove(key);
     }
 
