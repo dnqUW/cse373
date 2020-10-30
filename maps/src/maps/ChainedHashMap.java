@@ -150,6 +150,8 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
                 arrayMapIterator = chains[currIndex].iterator();
             }
         }
+        // iterator broken, doesnt consider last value of each ArrayMap
+        // secret case where remove doesnt remove the right value?? Even though we making our own test
         @Override
         public boolean hasNext() {
             for (int i = currIndex; i < chains.length; i++) {
