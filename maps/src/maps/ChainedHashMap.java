@@ -10,13 +10,13 @@ import java.util.NoSuchElementException;
  * @see Map
  */
 public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
-    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 1.0;
-    private static final int DEFAULT_INITIAL_CHAIN_COUNT = 10;
-    private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 10;
+    private int size;
     private int userInitialChainCap;
     private int userInitialChainCount;
-    private int size;
     private double userResizingFactor;
+    private static final int DEFAULT_INITIAL_CHAIN_COUNT = 10;
+    private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 10;
+    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 1.0;
 
 
     /*
@@ -179,15 +179,15 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         public ChainedHashMapIterator(AbstractIterableMap<K, V>[] chains) {
             this.chains = chains;
             currIndex = 0;
-            if (chains[currIndex] != null) {
-                arrayMapIterator = chains[currIndex].iterator();
-            }
-            // for (int i = 0; i < chains.length; i++) {
-            //     if (chains[i] != null) {
-            //         arrayMapIterator = chains[i].iterator();
-            //     }
-            // } //also might need to tweak our hasNext and next
-            //
+            // if (chains[currIndex] != null) {
+            //     arrayMapIterator = chains[currIndex].iterator();
+            // }
+            for (int i = currIndex; i < chains.length; i++) {
+                if (chains[i] != null) {
+                    arrayMapIterator = chains[i].iterator();
+                    break;
+                }
+            } //also might need to tweak our hasNext and next
         }
         // iterator broken, doesnt consider last value of each ArrayMap
         // secret case in AM where remove doesnt remove the right value?? Even though we making our own test
