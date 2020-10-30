@@ -212,7 +212,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
         @Override
         public Entry<K, V> next() {
-            if (arrayMapIterator.hasNext()) {
+            if (arrayMapIterator != null && arrayMapIterator.hasNext()) {
                 return arrayMapIterator.next();
             } else {
                 throw new NoSuchElementException();

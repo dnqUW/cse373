@@ -90,7 +90,6 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         // In our if statement, objects,equals where key is null and getkey is null
         for (int i = 0; i < size; i++) { // AK05
             if (Objects.equals(entries[i].getKey(), key)) {
-                // || (key == null && entries[i].getValue() != null))
                 V removedV = entries[i].getValue();
                 entries[i] = entries[size - 1];
                 entries[size - 1] = null;
