@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
+
 
 /**
  * @see AbstractIterableMap
@@ -70,9 +72,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         }
         if (containsKey(key)) {
             for (int i = 0; i < size; i++) { // if Key exists
-                if ((key != null && java.util.Objects.equals(entries[i].getKey(), key))
-                        || (key == null && entries[i].getValue() != null)) {
-                    //
+                if (Objects.equals(entries[i].getKey(), key)) {
                     V oldVal = entries[i].getValue();
                     entries[i].setValue(value);
                     return oldVal;
@@ -87,9 +87,10 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V remove(Object key) {
+        // In our if statement, objects,equals where key is null and getkey is null
         for (int i = 0; i < size; i++) { // AK05
-            if ((key != null && java.util.Objects.equals(entries[i].getKey(), key))
-                    || (key == null && entries[i].getValue() != null)) {
+            if (Objects.equals(entries[i].getKey(), key)) {
+                // || (key == null && entries[i].getValue() != null))
                 V removedV = entries[i].getValue();
                 entries[i] = entries[size - 1];
                 entries[size - 1] = null;
