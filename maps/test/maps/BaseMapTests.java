@@ -403,6 +403,9 @@ public abstract class BaseMapTests extends BaseTest {
         }
 
         assertThat(map).containsExactlyInAnyOrderEntriesOf(actual);
+
+        // testing iterator. Creating iterator, running through it,
+        // and making sure all values expecting are actually there
     }
 
     @Test

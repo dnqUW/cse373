@@ -147,7 +147,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
 
         @Override
         public boolean hasNext() {
-            return ((entries.length - 1 > currIndex) && (entries[currIndex] != null));
+            return ((entries.length - 1 >= currIndex) && (entries[currIndex] != null));
         }
 
         @Override
