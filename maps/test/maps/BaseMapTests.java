@@ -462,14 +462,15 @@ public abstract class BaseMapTests extends BaseTest {
     @Test
     void insertTwoNullKeys() {
         Map<Integer, Integer> map = createMap();
-        map.put(100, 200);
-        map.put(null, 100);
-        map.remove(100, 200);
+        map.put(1, 2);
+        map.put(2, 2);
+        map.put(3, 2);
+        map.put(null, 1);
         map.put(null, 105);
 
 
         Object output = map.remove(null);
-        assertThat(output).isEqualTo(100);
+        assertThat(output).isEqualTo(105);
 
     }
 
