@@ -10,7 +10,6 @@ import java.util.NoSuchElementException;
  * @see Map
  */
 public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
-    // TODO: define reasonable default values for each of the following three fields
     private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 1;
     private static final int DEFAULT_INITIAL_CHAIN_COUNT = 10;
     private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 10;
@@ -81,10 +80,13 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         return oldVal;
     }
 
+    // size inserting same element and replacing it
     @Override
     public V remove(Object key) {
         int hashedKey = chainHashedKey(key);
-        size--;
+        if (containsKey(hashedKey)) {
+            size--;
+        }
         return chains[hashedKey].remove(key);
     }
 
@@ -145,42 +147,42 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     private static class ChainedHashMapIterator<K, V> implements Iterator<Map.Entry<K, V>> {
         private AbstractIterableMap<K, V>[] chains;
         private int currIndex;
-        private Iterator<Map.Entry<K, V>> arrayMapIter;
+        private Iterator<Map.Entry<K, V>> arrayMapIterator;
         // You may add more fields and constructor parameters
 
         public ChainedHashMapIterator(AbstractIterableMap<K, V>[] chains) {
             this.chains = chains;
             currIndex = 0;
             if (chains[currIndex] != null) {
-                arrayMapIter = chains[currIndex].iterator();
+                arrayMapIterator = chains[currIndex].iterator();
             }
-        }
 
+            // for (int i = 0; i < chains.length; i++) {
+            //     if (chains[i] != null || chains[i].size() != 0) {
+            //         arrayMapIter = chains[i].iterator();
+            //     }
+            // }
+        }
         @Override
         public boolean hasNext() {
             for (int i = currIndex; i < chains.length; i++) {
-                if (arrayMapIter != null) {
-                    if (arrayMapIter.hasNext()) {
-                        return true;
-                    }
-                }
-                if (chains.length - 1 > currIndex) {
+                if (arrayMapIterator != null && arrayMapIterator.hasNext()) {
+                    return true;
+                } else if (currIndex == chains.length - 1) {
                     return false;
                 }
+                currIndex++;
                 if (chains[currIndex] != null) {
-                    arrayMapIter = chains[currIndex].iterator();
+                    arrayMapIterator = chains[currIndex].iterator();
                 }
-                // } else {
-                //     arrayMapIter = null;
-                // }
             }
             return false;
         }
 
         @Override
-        public Map.Entry<K, V> next() {
-            if (this.hasNext()) {
-                return arrayMapIter.next();
+        public Entry<K, V> next() {
+            if (arrayMapIterator.hasNext()) {
+                return arrayMapIterator.next();
             } else {
                 throw new NoSuchElementException();
             }
