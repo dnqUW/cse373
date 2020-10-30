@@ -456,6 +456,18 @@ public abstract class BaseMapTests extends BaseTest {
 
     }
 
+    @Test
+    void insertTwoNullKeys() {
+        Map<Integer, Integer> map = createMap();
+        map.put(null, 100);
+        map.put(null, 105);
+
+
+        Object output = map.remove(null);
+        assertThat(output).isEqualTo(105);
+
+    }
+
     void exhaust(Iterator<?> iterator) {
         while (iterator.hasNext()) {
             iterator.next();

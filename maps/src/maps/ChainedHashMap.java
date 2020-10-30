@@ -149,12 +149,6 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
             if (chains[currIndex] != null) {
                 arrayMapIterator = chains[currIndex].iterator();
             }
-
-            // for (int i = 0; i < chains.length; i++) {
-            //     if (chains[i] != null || chains[i].size() != 0) {
-            //         arrayMapIter = chains[i].iterator();
-            //     }
-            // }
         }
         @Override
         public boolean hasNext() {
