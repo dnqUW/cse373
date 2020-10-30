@@ -77,7 +77,9 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         int hashedKey = chainHashedKey(key);
         V oldVal = chains[hashedKey].get(key);
         chains[hashedKey].put(key, value);
-        size++;
+        if (oldVal == null) {
+            size++;
+        }
         if ((double) chains[hashedKey].size() / (double) chains.length > DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD) {
             chains = resizeAndRehash();
         }
@@ -88,10 +90,9 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public V remove(Object key) {
         int hashedKey = chainHashedKey(key);
-        // if (containsKey(hashedKey)) {
-        //     size--;
-        // }
-        size--;
+        if (size != 0) {
+            size--;
+        }
         return chains[hashedKey].remove(key);
     }
 
