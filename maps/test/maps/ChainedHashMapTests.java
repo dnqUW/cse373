@@ -43,6 +43,7 @@ public class ChainedHashMapTests extends BaseMapTests {
     }
 
     @Test
+    // ratio of elements to number of buckets
     void constructor_withResizeLoadFactorThreshold_resizesAtCorrectTime() {
         Map<Integer, Integer> map = createMap(100, 1, 10);
         for (int i = 0; i < 99; i++) {

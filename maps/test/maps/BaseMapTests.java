@@ -473,6 +473,20 @@ public abstract class BaseMapTests extends BaseTest {
 
     }
 
+    @Test
+    void put5ClearReturnNull() {
+        Map<Integer, Integer> map = createMap();
+        map.put(100, 100);
+        map.put(200, 100);
+        map.put(300, 100);
+        map.put(400, 100);
+        map.put(500, 100);
+        map.clear();
+
+        Object output = map.put(600, 200);
+        assertThat(output).isEqualTo(null);
+    }
+
     // @Test
     // void iterator_afterPut200() {
     //     Map<Integer, Integer> map = createMap();

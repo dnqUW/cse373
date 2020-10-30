@@ -10,10 +10,14 @@ import java.util.NoSuchElementException;
  * @see Map
  */
 public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
-    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 12.5;
+    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 1.0;
     private static final int DEFAULT_INITIAL_CHAIN_COUNT = 10;
     private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 10;
+    private int userInitialChainCap;
+    private int userInitialChainCount;
     private int size;
+    private double userResizingFactor;
+
 
     /*
     Warning:
@@ -30,7 +34,10 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     public ChainedHashMap(double resizingLoadFactorThreshold, int initialChainCount, int chainInitialCapacity) {
         size = 0; // is this size of chains horizontal? Or size of LL vert.
+        this.userInitialChainCount = initialChainCount;
         this.chains = createArrayOfChains(initialChainCount);
+        this.userInitialChainCap = chainInitialCapacity;
+        this.userResizingFactor = resizingLoadFactorThreshold;
         for (int i = 0; i < initialChainCount; i++) {
             chains[i] = createChain(chainInitialCapacity);
         }
@@ -72,16 +79,25 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         }
     }
 
+    // Failing size cases, size after removekey == 1, size after remove
+    // Put returns null
+    // Null pointer exceptions
+
     @Override
     public V put(K key, V value) {
         int hashedKey = chainHashedKey(key);
-        V oldVal = chains[hashedKey].get(key);
-        chains[hashedKey].put(key, value);
-        if (oldVal == null) {
-            size++;
-            return null;
+        V oldVal = null;
+        if (chains[hashedKey] != null) {
+            oldVal = chains[hashedKey].get(key);
+        } else {
+            chains[hashedKey] = createChain(userInitialChainCap);
         }
-        if ((double) chains[hashedKey].size() / (double) chains.length > DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD) {
+        int oldSize = chains[hashedKey].size();
+        chains[hashedKey].put(key, value);
+        if (oldSize < chains[hashedKey].size()) {
+            size++;
+        }
+        if ((double) chains[hashedKey].size() / (double) chains.length > userResizingFactor) {
             chains = resizeAndRehash();
         }
         return oldVal;
@@ -94,7 +110,9 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
             return null;
         } else {
             int hashedKey = chainHashedKey(key);
-            size--;
+            if (containsKey(key)) {
+                size--;
+            }
             return chains[hashedKey].remove(key);
         }
     }
@@ -128,11 +146,17 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         }
     }
 
+    // For arrayofchains
+    // what is each chain/bucket initialized to
     private AbstractIterableMap<K, V>[] resizeAndRehash() {
         AbstractIterableMap<K, V>[] newChain = createArrayOfChains(2 * chains.length);
         for (Map.Entry<K, V> entry : this) {
-            int newHashedKey = entry.getKey().hashCode();
-            newChain[newHashedKey % newChain.length].put(entry.getKey(), entry.getValue());
+            int newHashedKey = Math.abs(entry.getKey().hashCode());
+            if (newChain[newHashedKey % newChain.length] == null) {
+                newChain[newHashedKey % newChain.length] = createChain(userInitialChainCount);
+            } else {
+                newChain[newHashedKey % newChain.length].put(entry.getKey(), entry.getValue());
+            }
         }
         return newChain;
     }
@@ -158,6 +182,12 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
             if (chains[currIndex] != null) {
                 arrayMapIterator = chains[currIndex].iterator();
             }
+            // for (int i = 0; i < chains.length; i++) {
+            //     if (chains[i] != null) {
+            //         arrayMapIterator = chains[i].iterator();
+            //     }
+            // } //also might need to tweak our hasNext and next
+            //
         }
         // iterator broken, doesnt consider last value of each ArrayMap
         // secret case in AM where remove doesnt remove the right value?? Even though we making our own test
