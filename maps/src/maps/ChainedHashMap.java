@@ -90,11 +90,11 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         }
         int oldSize = chains[hashedKey].size();
         chains[hashedKey].put(key, value);
-        if (oldSize < chains[hashedKey].size()) {
-            size++;
-        }
         if ((double) chains[hashedKey].size() / (double) chains.length > userResizingFactor) {
             chains = resizeAndRehash();
+        }
+        if (oldSize < chains[hashedKey].size()) {
+            size++;
         }
         return oldVal;
     }
