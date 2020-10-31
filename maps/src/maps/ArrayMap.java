@@ -12,7 +12,7 @@ import java.util.Objects;
  * @see Map
  */
 public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
-    private static final int DEFAULT_INITIAL_CAPACITY = 10; // Thinking 10 because eventually implement mod operator
+    private static final int DEFAULT_INITIAL_CAPACITY = 10;
     private int size;
     /*
     Warning:
@@ -87,7 +87,6 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V remove(Object key) {
-        // In our if statement, objects,equals where key is null and getkey is null
         for (int i = 0; i < size; i++) { // AK05
             if (Objects.equals(entries[i].getKey(), key)) {
                 V removedV = entries[i].getValue();
@@ -157,7 +156,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         @Override
         public Map.Entry<K, V> next() {
             if (this.hasNext()) {
-                Map.Entry<K, V> entry = entries[currIndex]; // + 1?
+                Map.Entry<K, V> entry = entries[currIndex];
                 currIndex++;
                 return entry;
             } else {

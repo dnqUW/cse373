@@ -489,6 +489,27 @@ public abstract class BaseMapTests extends BaseTest {
     }
 
     // @Test
+    // Preliminary test, unfinished
+    //
+    // void removeAllAfterPutManyKeysWithNegativeHashCodes() {
+    //     Map<Integer, Integer> map = createMap();
+    //     Map<Integer, Integer> actual = new HashMap<>();
+    //     final int size = 10000;
+    //     for (int i = 0; i < size; i++) {
+    //         map.put(i, i*i);
+    //         actual.put(i, i*i);
+    //     }
+    //
+    //     for (int i = 0; i < size; i++) {
+    //         map.remove(i);
+    //         actual.remove(i);
+    //         assertThat(map)
+    //             .as("after removing %d/%d", i + 1, size)
+    //             .containsExactlyInAnyOrderEntriesOf(actual);
+    //     }
+    // }
+
+    // @Test
     // void iterator_afterPut200() {
     //     Map<Integer, Integer> map = createMap();
     //     Map<Integer, Integer> actual = new HashMap<>();

@@ -79,10 +79,6 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         }
     }
 
-    // Failing size cases, size after removekey == 1, size after remove
-    // Put returns null
-    // Null pointer exceptions
-
     @Override
     public V put(K key, V value) {
         int hashedKey = chainHashedKey(key);
@@ -103,7 +99,6 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         return oldVal;
     }
 
-    // size inserting same element and replacing it
     @Override
     public V remove(Object key) {
         if (size == 0) {
@@ -146,17 +141,14 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         }
     }
 
-    // For arrayofchains
-    // what is each chain/bucket initialized to
     private AbstractIterableMap<K, V>[] resizeAndRehash() {
         AbstractIterableMap<K, V>[] newChain = createArrayOfChains(2 * chains.length);
         for (Map.Entry<K, V> entry : this) {
             int newHashedKey = Math.abs(entry.getKey().hashCode());
             if (newChain[newHashedKey % newChain.length] == null) {
                 newChain[newHashedKey % newChain.length] = createChain(userInitialChainCount);
-            } else {
-                newChain[newHashedKey % newChain.length].put(entry.getKey(), entry.getValue());
             }
+            newChain[newHashedKey % newChain.length].put(entry.getKey(), entry.getValue());
         }
         return newChain;
     }
@@ -179,22 +171,15 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         public ChainedHashMapIterator(AbstractIterableMap<K, V>[] chains) {
             this.chains = chains;
             currIndex = 0;
-            // if (chains[currIndex] != null) {
-            //     arrayMapIterator = chains[currIndex].iterator();
-            // }
             for (int i = currIndex; i < chains.length; i++) {
                 if (chains[i] != null) {
                     arrayMapIterator = chains[i].iterator();
                     break;
                 }
-            } //also might need to tweak our hasNext and next
+            }
         }
-        // iterator broken, doesnt consider last value of each ArrayMap
-        // secret case in AM where remove doesnt remove the right value?? Even though we making our own test
-        // afraid the last 2 questions dont depend on iterator, can refer us to the  right point?
-        //
+
         @Override
-        //
         public boolean hasNext() {
             for (int i = currIndex; i < chains.length; i++) {
                 if (arrayMapIterator != null && arrayMapIterator.hasNext()) {
