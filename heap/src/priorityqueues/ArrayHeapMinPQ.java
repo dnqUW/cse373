@@ -1,7 +1,11 @@
 package priorityqueues;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.IntStream;
 
 /**
  * @see ExtrinsicMinPQ
@@ -63,6 +67,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     @Override
     public T removeMin() {
         // need to shift everything in the array now? Or do we do array first and then etc
+        if (size() == 0) {
+            throw new NoSuchElementException("PQ is empty");
+        }
         return items.remove(0).getItem();
     }
 
@@ -87,4 +94,17 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     //        then something else do something else
     // }
 
+    // This one used on NaiveMinPQ
+    // private Optional<PriorityNode<T>> findNode(T item) {
+    //     return this.items.stream()
+    //         .filter(node -> node.getItem().equals(item))
+    //         .findFirst();
+    // }
+    //
+    // private int findIndexOfMin() {
+    //     // iterate through each index to find the one with the min-priority item
+    //     return IntStream.range(0, this.items.size()).boxed()
+    //         .min(Comparator.comparingDouble(i -> this.items.get(i).getPriority()))
+    //         .orElseThrow();
+    // }
 }
