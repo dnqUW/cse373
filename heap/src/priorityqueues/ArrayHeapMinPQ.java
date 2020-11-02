@@ -11,11 +11,21 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     // We access these during grading to test your code.
     static final int START_INDEX = 1;
     List<PriorityNode<T>> items;
-    // TODO: add fields as necessary
+    int size;
+    T min;
 
     public ArrayHeapMinPQ() {
         items = new ArrayList<>();
-        // TODO: add code as necessary
+        size = items.size();
+        if (!items.isEmpty()) {
+            min = items.get(0).getItem();
+        } else { min = null; }
+        // PriorityNode[] itemsSimplified = new PriorityNode[items.size()]; // needs to be longer? 2 * length
+        //
+        // for (int i = START_INDEX; i <= itemsSimplified.length; i++) {
+        //     itemsSimplified[i] = items.get(i);
+        //
+        // }
     }
 
     // Here's a method stub that may be useful. Feel free to change or remove it, if you wish.
@@ -23,44 +33,58 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     /**
      * A helper method for swapping the items at two indices of the array heap.
      */
+    // Let's break down ties using the name. Compare them based on names?
+    // What if no name? higher value > lower value, and if string, take first char, and > check
     private void swap(int a, int b) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        // PriorityNode temp = imemsSimplified[a]
+        // itemsSimplified[a] = itemsSimplified[b];
+        // itemsSimplified[b] = temp;
+        // do we need to reorganize?
+        // items.get(a) = items.get(b)
+        // items.get(b) = temp;
     }
 
     @Override
     public void add(T item, double priority) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        // add at an index algorithm =
+        // itemsSimplified[items.size + 1] = new PriorityNode(item, priority);
     }
 
     @Override
     public boolean contains(T item) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return items.contains(item); // items.something.getItem().equals(item);
     }
 
     @Override
     public T peekMin() {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return min;
     }
 
     @Override
     public T removeMin() {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        // need to shift everything in the array now? Or do we do array first and then etc
+        return items.remove(0).getItem();
     }
 
     @Override
     public void changePriority(T item, double priority) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        findNode(item).setPriority(priority);
     }
 
     @Override
     public int size() {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return size;
     }
+
+    private PriorityNode<T> findNode(T item) {
+        // Can use calculations to cut down finding?
+        return null;
+    }
+    //
+    // lets do binary search?
+    // private int binarySearchForIndex {
+    //     if (items.get(items.size() / 2).getPriority() <
+    //        then something else do something else
+    // }
+
 }
