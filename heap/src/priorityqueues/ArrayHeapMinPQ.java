@@ -40,7 +40,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     // Let's break down ties using the name. Compare them based on names?
     // What if no name? higher value > lower value, and if string, take first char, and > check
     private void swap(int a, int b) {
-        // PriorityNode temp = imemsSimplified[a]
+        // PriorityNode temp = itemsSimplified[a]
         // itemsSimplified[a] = itemsSimplified[b];
         // itemsSimplified[b] = temp;
         // do we need to reorganize?
@@ -51,7 +51,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     @Override
     public void add(T item, double priority) {
         // add at an index algorithm =
-        // itemsSimplified[items.size + 1] = new PriorityNode(item, priority);
+        // itemsSimplified[items.size + START_INDEX] = new PriorityNode(item, priority); // 
     }
 
     @Override
@@ -94,7 +94,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     //        then something else do something else
     // }
 
-    // This one used on NaiveMinPQ
+    // This one used on NaiveMinPQ, and uses brute force/ Spec says don't do this.
     // private Optional<PriorityNode<T>> findNode(T item) {
     //     return this.items.stream()
     //         .filter(node -> node.getItem().equals(item))
