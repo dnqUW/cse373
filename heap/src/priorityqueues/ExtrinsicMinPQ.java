@@ -5,13 +5,13 @@ import java.util.NoSuchElementException;
 /**
  * Priority queue where objects have a priority that is provided extrinsically,
  * i.e., priorities are supplied as an argument during insertion and can be changed
- * using the changePriority method. Cannot contain duplicate or null items.
+ * using the changePriority method. Cannot contain duplicate items.
  */
 public interface ExtrinsicMinPQ<T> {
 
     /**
      * Adds an item with the given priority value.
-     * @throws IllegalArgumentException if item is null or is already present in the PQ
+     * @throws IllegalArgumentException if item is already present in the PQ
      */
     void add(T item, double priority);
 
