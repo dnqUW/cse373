@@ -61,7 +61,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
     @Override
     public T peekMin() {
-        return min;
+        int minIndex = findIndexOfMin();
+        return items.get(minIndex).getItem();
     }
 
     @Override
@@ -70,7 +71,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (size() == 0) {
             throw new NoSuchElementException("PQ is empty");
         }
-        return items.remove(0).getItem();
+        int minIndex = findIndexOfMin();
+        return items.remove(minIndex).getItem();
     }
 
     @Override
@@ -101,10 +103,10 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     //         .findFirst();
     // }
     //
-    // private int findIndexOfMin() {
-    //     // iterate through each index to find the one with the min-priority item
-    //     return IntStream.range(0, this.items.size()).boxed()
-    //         .min(Comparator.comparingDouble(i -> this.items.get(i).getPriority()))
-    //         .orElseThrow();
-    // }
+    private int findIndexOfMin() {
+        // iterate through each index to find the one with the min-priority item
+        return IntStream.range(0, this.items.size()).boxed()
+            .min(Comparator.comparingDouble(i -> this.items.get(i).getPriority()))
+            .orElseThrow();
+    }
 }
