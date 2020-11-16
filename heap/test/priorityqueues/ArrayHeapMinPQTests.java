@@ -338,7 +338,9 @@ public class ArrayHeapMinPQTests extends BaseTest {
             ExtrinsicMinPQ<String> pq = createMinPQ();
 
             pq.add(null, 15);
+            System.out.println(pq.contains(null));
             assertThat(pq.contains(null)).isTrue();
+
             assertThat(pq).isValid();
         }
 
