@@ -292,18 +292,18 @@ public class ArrayHeapMinPQTests extends BaseTest {
             assertThat(pq).isValid();
         }
 
-        //     @Test
-        //     void ourTest() {
-        //         ExtrinsicMinPQ<String> pq = setUpMinPQ();
-        //         List<String> output = new LinkedList<>();
-        //
-        //         while (pq.size() > 0) {
-        //             output.add(pq.removeMin());
-        //             assertThat(pq).isValid();
-        //         }
-        //         assertThat(output).containsExactly(correctOrdering);
-        //         assertThat(pq).isValid();
-        //     }
+            @Test
+            void ourTest() {
+                ExtrinsicMinPQ<String> pq = setUpMinPQ();
+                List<String> output = new LinkedList<>();
+
+                while (pq.size() > 0) {
+                    output.add(pq.removeMin());
+                    assertThat(pq).isValid();
+                }
+                assertThat(output).containsExactly(correctOrdering);
+                assertThat(pq).isValid();
+            }
     }
 
     @Nested

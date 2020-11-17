@@ -80,17 +80,19 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     @Override
     public void changePriority(T item, double priority) {
         if (!contains(item)) {
-                throw new NoSuchElementException();
+            throw new NoSuchElementException();
         }
-        if (size > 0) {
-            int index = indexOf(item);
-            items.get(index).setPriority(priority);
+        int index = indexOf(item);
+        items.get(index).setPriority(priority);
+        if (index >= 1) {
             if (items.get(index).getPriority()
                 < (items.get((index - 1) / 2)).getPriority()) {
                 percolateUp(index);
             } else {
                 percolateDown(index);
             }
+        } else {
+            percolateDown(index);
         }
     }
 
