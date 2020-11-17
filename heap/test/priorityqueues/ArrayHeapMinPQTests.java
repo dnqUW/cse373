@@ -306,28 +306,6 @@ public class ArrayHeapMinPQTests extends BaseTest {
 
         @Test
         void ourTest2() {
-            String[] newOrder = {"Cosette", "Marius", "Jean Valjean", "Javert", "Eponine", "Gavroche", "Fantine",
-                "Thenardier", "Enjolras", "Grantaire"};
-            ExtrinsicMinPQ<String> pq = setUpMinPQ();
-            List<String> output = new LinkedList<>();
-
-            assertThat(pq).isValid();
-            pq.changePriority("Eponine", 13.0);
-            pq.changePriority("Eponine", 4.5);
-            pq.changePriority("Javert", 6.5);
-            pq.changePriority("Cosette", 8.5);
-            pq.changePriority("Cosette", 0.5);
-
-            while (pq.size() > 0) {
-                output.add(pq.removeMin());
-                assertThat(pq).isValid();
-            }
-
-            assertThat(output).containsExactly(newOrder);
-            assertThat(pq).isValid();
-        }
-        @Test
-        void ourTest3() {
             ExtrinsicMinPQ<String> pq = createMinPQ();
             pq.add("a", 1);
             pq.add("b", 2);
