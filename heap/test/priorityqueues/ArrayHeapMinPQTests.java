@@ -292,18 +292,39 @@ public class ArrayHeapMinPQTests extends BaseTest {
             assertThat(pq).isValid();
         }
 
-            @Test
-            void ourTest() {
-                ExtrinsicMinPQ<String> pq = setUpMinPQ();
-                List<String> output = new LinkedList<>();
-
-                while (pq.size() > 0) {
-                    output.add(pq.removeMin());
-                    assertThat(pq).isValid();
-                }
-                assertThat(output).containsExactly(correctOrdering);
+        @Test
+        void ourTest() {
+            ExtrinsicMinPQ<String> pq = setUpMinPQ();
+            List<String> output = new LinkedList<>();
+            while (pq.size() > 0) {
+                output.add(pq.removeMin());
                 assertThat(pq).isValid();
             }
+            assertThat(output).containsExactly(correctOrdering);
+            assertThat(pq).isValid();
+        }
+
+        @Test
+        void ourTest2() {
+            String[] newOrder = {"Cosette", "Marius", "Jean Valjean", "Javert", "Eponine", "Gavroche", "Fantine",
+                "Thenardier", "Enjolras", "Grantaire"};
+            ExtrinsicMinPQ<String> pq = setUpMinPQ();
+            List<String> output = new LinkedList<>();
+
+            pq.changePriority("Eponine", 13.0);
+            pq.changePriority("Eponine", 4.5);
+            pq.changePriority("Javert", 6.5);
+            pq.changePriority("Cosette", 8.5);
+            pq.changePriority("Cosette", 0.5);
+
+            while (pq.size() > 0) {
+                output.add(pq.removeMin());
+                assertThat(pq).isValid();
+            }
+
+            assertThat(output).containsExactly(newOrder);
+            assertThat(pq).isValid();
+        }
     }
 
     @Nested
