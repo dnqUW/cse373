@@ -83,17 +83,22 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             throw new NoSuchElementException();
         }
         int index = indexOf(item);
-        items.get(index).setPriority(priority);
-        if (index >= 1) {
-            if (items.get(index).getPriority()
-                < (items.get((index - 1) / 2)).getPriority()) {
-                percolateUp(index);
-            } else {
-                percolateDown(index);
-            }
-        } else {
+
+
+        if (index >= 1 && index < size) {
+            items.get(index).setPriority(priority);
+            // if (items.get(index).getPriority()
+            //     < (items.get((index - 1) / 2)).getPriority()) {
             percolateDown(index);
+            percolateUp(index);
+            // call both so that everything is in place
+            // } else {
+
+            // }
         }
+        // else {
+        //     percolateDown(index);
+        // }
     }
 
     @Override
