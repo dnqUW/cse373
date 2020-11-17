@@ -311,6 +311,7 @@ public class ArrayHeapMinPQTests extends BaseTest {
             ExtrinsicMinPQ<String> pq = setUpMinPQ();
             List<String> output = new LinkedList<>();
 
+            assertThat(pq).isValid();
             pq.changePriority("Eponine", 13.0);
             pq.changePriority("Eponine", 4.5);
             pq.changePriority("Javert", 6.5);
@@ -324,6 +325,40 @@ public class ArrayHeapMinPQTests extends BaseTest {
 
             assertThat(output).containsExactly(newOrder);
             assertThat(pq).isValid();
+        }
+        @Test
+        void ourTest3() {
+            ExtrinsicMinPQ<String> pq = createMinPQ();
+            pq.add("a", 1);
+            pq.add("b", 2);
+            pq.add("c", 3);
+            pq.add("d", 4);
+            pq.add("e", 5);
+
+            assertThat(pq).isValid();
+
+            pq.changePriority("a", 13.0);
+            assertThat(pq).isValid();
+            pq.changePriority("a", 4.5);
+            assertThat(pq).isValid();
+            pq.changePriority("c", 6.5);
+            assertThat(pq).isValid();
+            pq.changePriority("d", 8.5);
+            assertThat(pq).isValid();
+            pq.changePriority("a", 0.5);
+            assertThat(pq).isValid();
+
+
+            // assertThat(pq.removeMin()).isEqualTo("a");
+            // assertThat(pq).isValid();
+            // assertThat(pq.removeMin()).isEqualTo("b");
+            // assertThat(pq).isValid();
+            // assertThat(pq.removeMin()).isEqualTo("c");
+            // assertThat(pq).isValid();
+            // assertThat(pq.removeMin()).isEqualTo("d");
+            // assertThat(pq).isValid();
+            // assertThat(pq.removeMin()).isEqualTo("e");
+            // assertThat(pq).isValid();
         }
     }
 

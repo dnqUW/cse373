@@ -36,7 +36,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             items.set(a, items.get(b));
             items.set(b, temp);
             itemsIndex.put(temp.getItem(), b);
-            itemsIndex.put(items.get(b).getItem(), a);
+            itemsIndex.put(items.get(a).getItem(), a);
         }
     }
 
@@ -71,7 +71,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
         swap(START_INDEX, size - 1);
         T val = items.remove(size - 1).getItem();
-        // itemsIndex.remove(val);
+        itemsIndex.remove(val);
         size--;
         percolateDown(START_INDEX);
         return val;
@@ -85,7 +85,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         int index = indexOf(item);
 
 
-        if (index >= 1 && index < size) {
+        if (index >= 0 && index < size) {
             items.get(index).setPriority(priority);
             // if (items.get(index).getPriority()
             //     < (items.get((index - 1) / 2)).getPriority()) {
@@ -137,7 +137,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
                     percolateDown(percolatedIndex);
                 } else if (right < left && right < parent) {
                     swap(currIndex, percolatedIndex + 1);
-                    percolateDown(percolatedIndex++);
+                    percolateDown(percolatedIndex + 1);
                 }
             } else {
                 if (left < parent) {
