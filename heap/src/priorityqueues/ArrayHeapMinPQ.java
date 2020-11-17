@@ -74,6 +74,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
         swap(START_INDEX, size - 1);
         T val = items.remove(size - 1).getItem();
+        // itemsIndex.remove(val);
         size--;
         percolateDown(START_INDEX);
         return val;
@@ -121,73 +122,27 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     }
 
     private void percolateDown(int currIndex) {
-        int percolatedIndex = 2 * (currIndex + 1);
-        if (percolatedIndex <= size) {
-            if (items.get(currIndex).getPriority()
-                < items.get(currIndex).getPriority()) {
-                if (items.get(percolatedIndex - 1).getPriority()
-                    < items.get(percolatedIndex).getPriority()) {
-                    percolatedIndex++;
+        int percolatedIndex = (2 * currIndex) + 1;
+        if (percolatedIndex <= size - 1) {
+            double parent = items.get(currIndex).getPriority();
+            double left = items.get(percolatedIndex).getPriority();
+            if (percolatedIndex + 1 < size) {
+                double right = items.get(percolatedIndex + 1).getPriority();
+                if (left < right && left < parent) {
+                    swap(currIndex, percolatedIndex);
+                    percolateDown(percolatedIndex);
+                } else if (right < left && right < parent) {
+                    swap(currIndex, percolatedIndex + 1);
+                    percolateDown(percolatedIndex++);
                 }
-            swap(currIndex, percolatedIndex);
-            // currIndex = percolatedIndex; // wanted currIndex to be passed as the newly calculated index
+            } else {
+                if (left < parent) {
+                    swap(currIndex, percolatedIndex);
+                    percolateDown(percolatedIndex);
+                }
             }
         }
     }
 
-
-    // We don't know how to determine left or right
-    // check index + 1 vs index + 2
-    //
-    // private void percolateDown() {
-    //     if () { //itemsSimplified[START_INDEX].getPriority
-    //         // if its less than children, stay
-    //
-    //     } else if () { // if its greater than child 1 <= child 2, move to child 1, and swap
-    //         // if
-    //     } else { // swap with child 2
-    //         swap(itemsSimplified[START_INDEX], );
-    //     }
-    // }
-        // private int findLevel() {
-        //     items.sublist(Math.pow(2, i);
-        //     if (size() < itemsSimplified.length) {
-        //         return (int) (Math.log((itemsSimplified.length + 1) / 2) / Math.log(2));
-        //     } else {
-        //         return (int) (Math.log((items.size() + 1) / 2) / Math.log(2));
-        //     }
-        // }
-
-        // Take,
-        // i = log2(x + 1), i = level, and x = nodes per level
-        // log2 ((items.size() + 1) / 2), full tree
-        // find out if there are missing children nodesCur vs nodesExpected
-        // What if we made it so the array was always the size of a full tree, if there is an empty
-        // then its not a full tree.
-
-        // So first, we want to go to the beginning of the middle level, and search
-        // the amount of nodes that level has, use a calculation
-
-        // private PriorityNode<T> findNode(T item, int totalItems) {
-        //
-        //     if(items.equals(itemsSimplified[totalItems].getItem()) {
-        //         return
-        //     } else {
-        //
-        //         findNode(item, totalItems / 2);
-        //     }
-        // }
-
-        // private void resize() {
-        //     PriorityNode<T>[] newArray = new PriorityNode[2 * items.size() + 1]; // nodes expected
-        //     // Gives us i: if tree isnt full, if size < newArray.length { log2((newArray.length + 1) / 2)
-        //     // Start iterating at i / 2
-        //     // if (size != 0) {
-        //     for (int i = 0; i < newArray.length; i++) {
-        //         newArray[i] = itemsSimplified[i];
-        //     }
-        //     // }
-        //     itemsSimplified = newArray;
-        // }
-    }
+}
 

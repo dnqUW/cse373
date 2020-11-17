@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -250,7 +251,7 @@ public class ArrayHeapMinPQTests extends BaseTest {
     @DisplayName("Add 10 Increasing Priority")
     class Add10Increasing {
         String[] correctOrdering = {"Jean Valjean", "Javert", "Cosette", "Marius", "Eponine", "Gavroche", "Fantine",
-                                    "Thenardier", "Enjolras", "Grantaire"};
+            "Thenardier", "Enjolras", "Grantaire"};
 
         ExtrinsicMinPQ<String> setUpMinPQ() {
             ExtrinsicMinPQ<String> pq = createMinPQ();
@@ -290,6 +291,19 @@ public class ArrayHeapMinPQTests extends BaseTest {
             assertThat(output).containsExactly(correctOrdering);
             assertThat(pq).isValid();
         }
+
+        //     @Test
+        //     void ourTest() {
+        //         ExtrinsicMinPQ<String> pq = setUpMinPQ();
+        //         List<String> output = new LinkedList<>();
+        //
+        //         while (pq.size() > 0) {
+        //             output.add(pq.removeMin());
+        //             assertThat(pq).isValid();
+        //         }
+        //         assertThat(output).containsExactly(correctOrdering);
+        //         assertThat(pq).isValid();
+        //     }
     }
 
     @Nested
