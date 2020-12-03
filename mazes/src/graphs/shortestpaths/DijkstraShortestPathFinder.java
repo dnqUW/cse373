@@ -7,6 +7,7 @@ import priorityqueues.ExtrinsicMinPQ;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,17 +72,15 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
             return new ShortestPath.SingleVertex<>(start);
         }
         E edge = spt.get(end);
+        List<E> list = new ArrayList<>();
         if (edge == null) {
             return new ShortestPath.Failure<>();
         }
-        List<E> list = new ArrayList<>();
-        while (edge != null) {
-            list.add(edge);
-            spt.remove(edge.to());
-            if (edge.from() != null) {
-                edge = spt.get(edge.from());
-            }
+        while (spt.get(end) != null) {
+            list.add(spt.get(end));
+            end = spt.get(end).from();
         }
+        Collections.reverse(list);
         return new ShortestPath.Success<>(list);
     }
 
