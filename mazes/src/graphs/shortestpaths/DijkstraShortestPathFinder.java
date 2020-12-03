@@ -40,10 +40,13 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
         Map<V, E> spt =  new HashMap<>();
         Map<V, Double> distTo = new HashMap<>();
         distTo.put(start, 0.0);
-        ExtrinsicMinPQ<V> pq = new DoubleMapMinPQ<>();
+        DoubleMapMinPQ<V> pq = new DoubleMapMinPQ<>();
         pq.add(start, 0);
         while (!pq.isEmpty()) {
             V u = pq.removeMin();
+            if (Objects.equals(u, end)) {
+                return spt;
+            }
             for (E edge : graph.outgoingEdgesFrom(u)) {
                 double oldDist;
                 oldDist = distTo.getOrDefault(edge.to(), Double.POSITIVE_INFINITY);
@@ -64,18 +67,20 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
 
     @Override
     protected ShortestPath<V, E> extractShortestPath(Map<V, E> spt, V start, V end) {
+        if (Objects.equals(start, end)) {
+            return new ShortestPath.SingleVertex<>(start);
+        }
         E edge = spt.get(end);
-        if (spt.get(edge) == null) {
+        if (edge == null) {
             return new ShortestPath.Failure<>();
         }
-        if (start.equals(end)) {
-            return new ShortestPath.SingleVertex<>(end);
-        }
-
-        List<E> list = new ArrayList<>(spt.size());
-        while (edge.from() != null) {
+        List<E> list = new ArrayList<>();
+        while (edge != null) {
             list.add(edge);
-            edge = spt.get(edge.from());
+            spt.remove(edge.to());
+            if (edge.from() != null) {
+                edge = spt.get(edge.from());
+            }
         }
         return new ShortestPath.Success<>(list);
     }
