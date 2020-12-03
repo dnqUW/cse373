@@ -43,7 +43,7 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
         pq.add(start, 0);
         while (!pq.isEmpty()) {
             V u = pq.removeMin();
-            if (u.equals(end)) {
+            if (Objects.equals(u, end)) {
                 return spt;
             }
             for (E edge : graph.outgoingEdgesFrom(u)) {
@@ -66,7 +66,7 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
 
     @Override
     protected ShortestPath<V, E> extractShortestPath(Map<V, E> spt, V start, V end) {
-        if (start.equals(end)) {
+        if (Objects.equals(start, end)) {
             return new ShortestPath.SingleVertex<>(start);
         }
         E edge = spt.get(end);
