@@ -6,13 +6,11 @@ import priorityqueues.DoubleMapMinPQ;
 import priorityqueues.ExtrinsicMinPQ;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * Computes shortest paths using Dijkstra's algorithm.
@@ -45,7 +43,7 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
         pq.add(start, 0);
         while (!pq.isEmpty()) {
             V u = pq.removeMin();
-            if (Objects.equals(u, end)) {
+            if (u.equals(end)) {
                 return spt;
             }
             for (E edge : graph.outgoingEdgesFrom(u)) {
@@ -68,7 +66,7 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
 
     @Override
     protected ShortestPath<V, E> extractShortestPath(Map<V, E> spt, V start, V end) {
-        if (Objects.equals(start, end)) {
+        if (start.equals(end)) {
             return new ShortestPath.SingleVertex<>(start);
         }
         E edge = spt.get(end);
