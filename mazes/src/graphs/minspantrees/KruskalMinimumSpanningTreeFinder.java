@@ -45,10 +45,26 @@ public class KruskalMinimumSpanningTreeFinder<G extends KruskalGraph<V, E>, V, E
         edges.sort(Comparator.comparingDouble(E::weight));
         List<V> vertices = new ArrayList<>(graph.allVertices());
         DisjointSets<V> disjointSets = createDisjointSets();
-        // Set<E> finalMST = new HashSet<>();
+        Set<E> finalMST = new HashSet<>();
+
         // So if we get two islands, disconnected, or if one vertex is not conncetd to the MST
         // If check for failure if (any vertices are disconnected, fail)
         // As long as all vertices are connected, you can find an MST Success
+
+        for (V vertex : vertices) {
+            disjointSets.makeSet(vertex); // processed vertex
+        }
+        for (E edge : edges) {
+            if (disjointSets.findSet(edge.from()) != disjointSets.findSet(edge.to())) {
+                finalMST.add(edge);
+                disjointSets.union(edge.from(), edge.to());
+            }
+            if (edges.size() == vertices.size() - 1) { // reduce the size of the list edges
+                return new MinimumSpanningTree.Success<>(finalMST);
+            }
+        }
+
+
         // for (E edge : edges) {
         //     V u = edge.from();
         //     V v = edge.to();
@@ -63,18 +79,18 @@ public class KruskalMinimumSpanningTreeFinder<G extends KruskalGraph<V, E>, V, E
         //     }
         // }
 
-        for (E edge : edges) {
-            V u = edge.from();
-            V v = edge.to();
-            // finalMST.add(edge);
-            if (disjointSets.findSet(u) != disjointSets.findSet(v)) {
-
-            }
-            // edges.remove(edge);
-        }
-        if (edges.size() == vertices.size() - 1) { // reduce the size of the list edges
-            return new MinimumSpanningTree.Success<>();
-        }
+        // for (E edge : edges) {
+        //     V u = edge.from();
+        //     V v = edge.to();
+        //     // finalMST.add(edge);
+        //     if (disjointSets.findSet(u) != disjointSets.findSet(v)) {
+        //
+        //     }
+        //     // edges.remove(edge);
+        // }
+        // if (edges.size() == vertices.size() - 1) { // reduce the size of the list edges
+        //     return new MinimumSpanningTree.Success<>();
+        // }
         return new MinimumSpanningTree.Failure<>();
     }
 }
