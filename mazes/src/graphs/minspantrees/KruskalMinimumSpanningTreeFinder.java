@@ -1,17 +1,18 @@
 package graphs.minspantrees;
 
 import disjointsets.DisjointSets;
-import disjointsets.QuickFindDisjointSets;
+// import disjointsets.QuickFindDisjointSets;
+import disjointsets.UnionBySizeCompressingDisjointSets;
 import graphs.BaseEdge;
 import graphs.KruskalGraph;
-import graphs.shortestpaths.ShortestPath;
+// import graphs.shortestpaths.ShortestPath;
 
 import java.util.ArrayList;
-import java.util.Collections;
+// import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
+// import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -22,12 +23,12 @@ public class KruskalMinimumSpanningTreeFinder<G extends KruskalGraph<V, E>, V, E
     implements MinimumSpanningTreeFinder<G, V, E> {
 
     protected DisjointSets<V> createDisjointSets() {
-        return new QuickFindDisjointSets<>();
+        // return new QuickFindDisjointSets<>();
         /*
         Disable the line above and enable the one below after you've finished implementing
         your `UnionBySizeCompressingDisjointSets`.
          */
-        // return new UnionBySizeCompressingDisjointSets<>();
+        return new UnionBySizeCompressingDisjointSets<>();
 
         /*
         Otherwise, do not change this method.

@@ -46,6 +46,7 @@ public class UnionBySizeCompressingDisjointSets<T> implements DisjointSets<T> {
         while (pointers.get(index) >= 0) {
             set.add(index);
             index = pointers.get(index);
+            set.add(index);
         }
         // int overallRoot = index;
         // while (pointers.get(index) >= 0) {
@@ -53,11 +54,11 @@ public class UnionBySizeCompressingDisjointSets<T> implements DisjointSets<T> {
         //     pointers.set(index, overallRoot);
         //     index = parent;
         // }
-        for (Integer i : set) {
-            if (ids.get(index) >= 0) { // check if its overallRoot
-                pointers.set(i, index);
-            }
-        }
+        // for (Integer i : set) {
+        //     if (pointers.get(index) >= 0) { // check if its overallRoot
+        //         pointers.set(i, index);
+        //     }
+        // }
         return index;
     }
 
