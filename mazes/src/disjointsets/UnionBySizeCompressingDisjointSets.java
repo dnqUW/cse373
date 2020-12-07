@@ -42,22 +42,22 @@ public class UnionBySizeCompressingDisjointSets<T> implements DisjointSets<T> {
         }
         // Returns the index of the overall parent
         // record where we have visited
-        // Set<Integer> set = new HashSet<>();
+        Set<Integer> set = new HashSet<>();
+        while (pointers.get(index) >= 0) {
+            set.add(index);
+            index = pointers.get(index); // index
+        }
+        // int overallRoot = index;
         // while (pointers.get(index) >= 0) {
-        //     set.add(index);
-        //     index = pointers.get(index); // index
+        //     int parent = pointers.get(index);
+        //     pointers.set(index, overallRoot);
+        //     index = parent;
         // }
-        // // int overallRoot = index;
-        // // while (pointers.get(index) >= 0) {
-        // //     int parent = pointers.get(index);
-        // //     pointers.set(index, overallRoot);
-        // //     index = parent;
-        // // }
-        // for (Integer i : set) {
-        //     if (pointers.get(index) >= 0) { // check if its overallRoot
-        //         pointers.set(i, index);
-        //     }
-        // }
+        for (Integer i : set) {
+            if (pointers.get(index) >= 0) { // check if its overallRoot
+                pointers.set(i, index);
+            }
+        }
         return index;
     }
 
