@@ -45,8 +45,7 @@ public class UnionBySizeCompressingDisjointSets<T> implements DisjointSets<T> {
         Set<Integer> set = new HashSet<>();
         while (pointers.get(index) >= 0) {
             set.add(index);
-            index = pointers.get(index);
-            set.add(index);
+            index = pointers.get(index); // index
         }
         // int overallRoot = index;
         // while (pointers.get(index) >= 0) {
