@@ -54,9 +54,7 @@ public class UnionBySizeCompressingDisjointSets<T> implements DisjointSets<T> {
         //     index = parent;
         // }
         for (Integer i : set) {
-            if (pointers.get(index) >= 0) { // check if its overallRoot
-                pointers.set(i, index);
-            }
+            pointers.set(i, index);
         }
         return index;
     }
@@ -68,17 +66,17 @@ public class UnionBySizeCompressingDisjointSets<T> implements DisjointSets<T> {
         if (id1 == id2) {
             return false;
         }
-        this.ids.replaceAll((item, rep) -> rep == id1 ? id2 : rep);
-        // int size1 = pointers.get(id1); // overallRoot1
-        // int size2 = pointers.get(id2); // overallRoot2
-        // int sizeSum = size1 + size2;
-        // if (size1 >= size2) {
-        //     pointers.set(id2, id1);
-        //     pointers.set(id2, -sizeSum);
-        // } else {
-        //     pointers.set(id1, id2);
-        //     pointers.set(id1, -sizeSum);
-        // }
+        // this.ids.replaceAll((item, rep) -> rep == id1 ? id2 : rep);
+        int size1 = pointers.get(id1); // overallRoot1
+        int size2 = pointers.get(id2); // overallRoot2
+        int sizeSum = size1 + size2;
+        if (size1 <= size2) {
+            pointers.set(id2, id1);
+            pointers.set(id2, sizeSum);
+        } else {
+            pointers.set(id1, id2);
+            pointers.set(id1, sizeSum);
+        }
         return true; // Do we need an extra check?
     }
 }
