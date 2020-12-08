@@ -40,19 +40,11 @@ public class UnionBySizeCompressingDisjointSets<T> implements DisjointSets<T> {
         if (index == null) {
             throw new IllegalArgumentException(item + " is not in any set.");
         }
-        // Returns the index of the overall parent
-        // record where we have visited
         Set<Integer> set = new HashSet<>();
         while (pointers.get(index) >= 0) {
             set.add(index);
-            index = pointers.get(index); // index
+            index = pointers.get(index);
         }
-        // int overallRoot = index;
-        // while (pointers.get(index) >= 0) {
-        //     int parent = pointers.get(index);
-        //     pointers.set(index, overallRoot);
-        //     index = parent;
-        // }
         for (Integer i : set) {
             pointers.set(i, index);
         }
@@ -66,9 +58,8 @@ public class UnionBySizeCompressingDisjointSets<T> implements DisjointSets<T> {
         if (id1 == id2) {
             return false;
         }
-        // this.ids.replaceAll((item, rep) -> rep == id1 ? id2 : rep);
-        int size1 = pointers.get(id1); // overallRoot1
-        int size2 = pointers.get(id2); // overallRoot2
+        int size1 = pointers.get(id1);
+        int size2 = pointers.get(id2);
         int sizeSum = size1 + size2;
         if (size1 <= size2) {
             pointers.set(id2, id1);
@@ -77,6 +68,6 @@ public class UnionBySizeCompressingDisjointSets<T> implements DisjointSets<T> {
             pointers.set(id1, id2);
             pointers.set(id2, sizeSum);
         }
-        return true; // Do we need an extra check?
+        return true;
     }
 }
