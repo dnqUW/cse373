@@ -72,10 +72,10 @@ public class UnionBySizeCompressingDisjointSets<T> implements DisjointSets<T> {
         int sizeSum = size1 + size2;
         if (size1 <= size2) {
             pointers.set(id2, id1);
-            pointers.set(id2, sizeSum);
+            pointers.set(id1, sizeSum);
         } else {
             pointers.set(id1, id2);
-            pointers.set(id1, sizeSum);
+            pointers.set(id2, sizeSum);
         }
         return true; // Do we need an extra check?
     }
